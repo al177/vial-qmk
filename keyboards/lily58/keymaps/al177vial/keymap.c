@@ -260,6 +260,8 @@ static void render_status(void) {
     sprintf(wpm, "%03d", get_current_wpm());
     oled_write(wpm, false);
     oled_write_P(PSTR(" wpm\n"), false);
+    oled_write_ln(read_keylog(), false);
+    oled_write_ln(read_keylogs(), false);
 }
 
 static void render_bongo_cat(void) {
@@ -345,6 +347,13 @@ bool oled_task_user(void) {
     render_bongo_cat();	
   }
     return false;
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  if (record->event.pressed) {
+    set_keylog(keycode, record);
+  }
+  return true;
 }
 
 #endif // OLED_ENABLE
